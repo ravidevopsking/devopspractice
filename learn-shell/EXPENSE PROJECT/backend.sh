@@ -1,4 +1,4 @@
-source common.sh
+source COMMON.sh
 component=backend
 
 #type npm checks whether node js is installed or not, if it is installed it skips.
