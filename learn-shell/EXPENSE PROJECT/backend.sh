@@ -51,5 +51,5 @@ stat_check
 echo Load Schema
 #mysql_root_password picks from 1st argument of >>bash backend.sh ExpenseApp@1
 mysql_root_password=$1
-mysql -h mysql.rdevopsb73.online -uroot -p$mysql_root_password < /app/schema/backend.sql &>>$log_file
+mysql -h <mysqlip> -uroot -p$mysql_root_password < /app/schema/backend.sql &>>$log_file
 stat_check
