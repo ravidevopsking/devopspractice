@@ -1,15 +1,55 @@
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash
-dnf install nodejs -y
-useradd expense
+source common.sh
+component=backend
+
+#type npm checks whether node js is installed or not, if it is installed it skips.
+type npm &>>$log_file
+if [ $? -ne 0 ]; then
+  echo Install NodeJS Repos
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$log_file
+  stat_check
+
+  echo Install NodeJS
+  dnf install nodejs -y &>>$log_file
+  stat_check
+fi
+
+echo Copy Backend Service File
+cp backend.service /etc/systemd/system/backend.service &>>$log_file
+stat_check
+
+echo Add Application User
+#id is used to check whether user already exit or not
+id expense &>>$log_file
+if [ $? -ne 0 ]; then
+  useradd expense &>>$log_file
+fi
+stat_check
+
+echo Clean App Content
+rm -rf /app &>>$log_file
+stat_check
+
 mkdir /app
-curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip
-cp backend.service /etc/systemd/system/backend.service
 cd /app
-unzip /tmp/backend.zip
-npm install
-systemctl daemon-reload
-systemctl enable backend
-systemctl start backend
-dnf install mysql -y
-mysql -h 172.31.46.91 -uroot -pExpenseApp@1 < /app/schema/backend.sql
-#sqlserver privateip i.e mysql.raviskingdom.online
+
+download_and_extract
+
+echo Download Dependencies
+npm install &>>$log_file
+stat_check
+
+echo Start Backend Service
+systemctl daemon-reload &>>$log_file
+systemctl enable backend &>>$log_file
+systemctl restart backend &>>$log_file
+stat_check
+
+echo Install MySQL Client
+dnf install mysql -y &>>$log_file
+stat_check
+
+echo Load Schema
+#mysql_root_password picks from 1st argument of >>bash backend.sh ExpenseApp@1
+mysql_root_password=$1
+mysql -h mysql.rdevopsb73.online -uroot -p$mysql_root_password < /app/schema/backend.sql &>>$log_file
+stat_check
