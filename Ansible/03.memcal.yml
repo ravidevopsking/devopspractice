@@ -1,0 +1,19 @@
+- name: Print Used Memory
+  hosts: localhost
+  tasks:
+    - name: Get Memory
+      ansible.builtin.shell: free | grep Mem | xargs
+      register: free
+
+    - name: Set a fact
+      ansible.builtin.set_fact:
+        FREE: "{{ free.stdout | split(' ') }}"
+
+    - name: set facts
+      ansible.builtin.set_fact:
+        total: "{{ FREE[1] |int }}"
+        free: "{{ FREE[3] |int }}"
+
+    - name: Print free output
+      ansible.builtin.debug:
+        msg: "{{ free / total }}"
