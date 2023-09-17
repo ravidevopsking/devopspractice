@@ -1,0 +1,8 @@
+future reference directory added, This directory has let take frontend.yml,
+where it has configurations,tasks,variables together in a single file.
+As code is evolving in ansible ,
+configuration file moved under roles/frontend/files/expense.conf.
+Tasks moved under              roles/frontend/tasks/main.yml.
+variables moved under          roles/frontend/vars/main.yml.
+For future reference keeping this directory to read entire frontend.yml and other how they look
+like before evolved to ansible folder structure.
