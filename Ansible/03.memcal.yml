@@ -1,19 +1,52 @@
 - name: Print Used Memory
   hosts: localhost
   tasks:
-    - name: Get Memory
-      ansible.builtin.shell: free | grep Mem | xargs
-      register: free
+    #    - name: Get Memory
+    #      ansible.builtin.shell: free | grep Mem | xargs
+    #      register: free
+    #
+    #    - name: Set a fact
+    #      ansible.builtin.set_fact:
+    #        FREE: "{{ free.stdout | split(' ') }}"
+    #
+    #    - name: set facts
+    #      ansible.builtin.set_fact:
+    #        used_mem: "{{ 100 - (FREE[3]|int / FREE[1]|int * 100) }}"
+    #
+    #    - name: Print free output
+    #      ansible.builtin.debug:
+    #        msg: "{{ used_mem }}"
 
-    - name: Set a fact
-      ansible.builtin.set_fact:
-        FREE: "{{ free.stdout | split(' ') }}"
 
-    - name: set facts
-      ansible.builtin.set_fact:
-        total: "{{ FREE[1] |int }}"
-        free: "{{ FREE[3] |int }}"
+    #    - name: Memory Good
+    #      ansible.builtin.debug:
+    #        msg: Memory Good
+    #      when: used_mem |int < 50
+    #
+    #    - name: Memory Orange
+    #      ansible.builtin.debug:
+    #        msg: Memory Good
+    #      when: used_mem|int > 50 and used_mem|int < 70
+    #
+    #    - name: Memory Red
+    #      ansible.builtin.debug:
+    #        msg: Memory Red
+    #      when: used_mem|int > 70
 
-    - name: Print free output
+#Note: Above commented code is one method where we take responsibility to calculate the used memory.
+#But below code is taken from ansible default "ansible fact variable" which takes care of calculation, Read notebook.
+
+    - name: Memory Good
       ansible.builtin.debug:
-        msg: "{{ free / total }}"
+        msg: Memory Good
+      when: ansible_memory_mb["real"]["used"] /  ansible_memory_mb["real"]["total"] * 100  < 50
+
+    - name: Memory Orange
+      ansible.builtin.debug:
+        msg: Memory Good
+      when: ansible_memory_mb["real"]["used"] /  ansible_memory_mb["real"]["total"] * 100 > 50 and ansible_memory_mb["real"]["used"] /  ansible_memory_mb["real"]["total"] * 100 < 70
+
+    - name: Memory Red
+      ansible.builtin.debug:
+        msg: Memory Red
+      when: ansible_memory_mb["real"]["used"] /  ansible_memory_mb["real"]["total"] * 100 > 70
