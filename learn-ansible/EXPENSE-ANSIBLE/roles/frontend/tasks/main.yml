@@ -12,6 +12,7 @@
     src: expense.conf
     dest: /etc/nginx/default.d/expense.conf
 
+#from below module i am importing code from app_prereq.yml file of common directory for making code dry
 - name: Include App Pre-requisites
   ansible.builtin.import_role:
     name: common
