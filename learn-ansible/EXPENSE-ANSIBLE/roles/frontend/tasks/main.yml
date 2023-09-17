@@ -1,6 +1,7 @@
 #Note: below code is taken from frontend.yml file, as code is evolving tasks are put in frontend tasks directory
 #after creation of this main.yml, i have to delete frontend.yml file,but for future reference i am still keeping it.
 #will update here if i changed/removed frontend.yml location.
+#location is learn-ansible/expense-ansible/futurereference for code
 
 - name: Installing Nginx
   ansible.builtin.dnf:
