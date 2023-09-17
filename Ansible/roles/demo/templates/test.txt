@@ -1,0 +1,2 @@
+hello world
+hello {{ replace_me }}  #replace_me need to be pass from command line like  ansible-playbook -e replace_me=ravi
