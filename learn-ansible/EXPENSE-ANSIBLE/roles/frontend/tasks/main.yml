@@ -1,0 +1,24 @@
+#Note: below code is taken frontend.yml file, as code is evolving tasks are put in frontend tasks directory
+#after creation of this main.yml, i have to delete frontend.yml file,but for future reference i am still keeping it.
+#will update here if i changed/removed frontend.yml location.
+
+- name: Installing Nginx
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+
+- name: Placing Expense Config File in Nginx
+  ansible.builtin.copy:
+    src: expense.conf
+    dest: /etc/nginx/default.d/expense.conf
+
+- name: Include App Pre-requisites
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app_prereq
+
+- name: Starting Nginx Service
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
