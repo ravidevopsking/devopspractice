@@ -1,3 +1,6 @@
+- name: Set Hostname
+  ansible.builtin.shell: set-hostname mysql
+
 - name: Copy MySQL Repo
   ansible.builtin.copy:
     src: mysql.repo
@@ -18,4 +21,8 @@
     state: restarted
 
 - name: Set Root Password
-  ansible.builtin.shell: mysql_secure_installation --set-root-pass ExpenseApp@1
+  ansible.builtin.shell: mysql_secure_installation --set-root-pass {{ lookup('aws_ssm', 'expense.mysql.DB_PASS', region='us-east-1' ) }}
+
+#dns name and passwords are replaced with parameter name
+#- name: Set Root Password
+#  ansible.builtin.shell: mysql_secure_installation --set-root-pass ExpenseApp@1
