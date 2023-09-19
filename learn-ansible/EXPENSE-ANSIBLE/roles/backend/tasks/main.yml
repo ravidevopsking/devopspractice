@@ -1,3 +1,6 @@
+- name: Set Hostname
+  ansible.builtin.shell: set-hostname backend
+
 - name: Verify NodeJS
   ansible.builtin.shell: type npm
   register: npm
@@ -13,9 +16,10 @@
   when: npm.rc != 0
 
 - name: Copy Backend Service File
-  ansible.builtin.copy:
+  ansible.builtin.template:              #ansible.builtin.copy replaced with ansible.builtin.template
     src: backend.service
     dest: /etc/systemd/system/backend.service
+#as above module is using .template then files directory name is renamed/refactor to templates directory
 
 - name: Add application user
   ansible.builtin.user:
@@ -36,7 +40,11 @@
     name: mysql
 
 - name: Load Schema
-  ansible.builtin.shell: mysql -h mysql.rdevopsb73.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
+  ansible.builtin.shell: mysql -h {{ lookup('aws_ssm', 'expense.backend.DB_HOST', region='us-east-1' ) }} -uroot -p{{ lookup('aws_ssm', 'expense.backend.DB_PASS', region='us-east-1' ) }} < /app/schema/backend.sql
+
+#using parameter variable, hardcoding of dns and passwords are replaced in above load schema
+#- name: Load Schema
+#  ansible.builtin.shell: mysql -h mysql.rdevopsb73.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
 
 - name: Start backend Service
   ansible.builtin.systemd:
