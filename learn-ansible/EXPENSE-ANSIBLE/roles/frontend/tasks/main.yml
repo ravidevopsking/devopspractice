@@ -2,6 +2,8 @@
 #after creation of this main.yml, i have to delete frontend.yml file,but for future reference i am still keeping it.
 #will update here if i changed/removed frontend.yml location.
 #location is learn-ansible/expense-ansible/futurereference for code
+- name: Set Hostname
+  ansible.builtin.shell: set-hostname frontend
 
 - name: Installing Nginx
   ansible.builtin.dnf:
@@ -9,9 +11,10 @@
     state: present
 
 - name: Placing Expense Config File in Nginx
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: expense.conf
     dest: /etc/nginx/default.d/expense.conf
+#.copy module replaced with .template so files directory renamed to templates
 
 #from below module i am importing code from app_prereq.yml file of common directory for making code dry
 - name: Include App Pre-requisites
