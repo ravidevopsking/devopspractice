@@ -1,2 +1,3 @@
 hello world
 hello {{ replace_me }}  #replace_me need to be pass from command line like  ansible-playbook -e replace_me=ravi
+hello {{ app_name }} #app_name was using in devops75 instead of replace_me
