@@ -1,0 +1,9 @@
+- name: Demo on Parameters
+  hosts: localhost
+  tasks:
+    - name: Get a Parameter from Parameter Store
+      ansible.builtin.debug:
+        msg: "{{ lookup('aws_ssm', 'test', region='us-east-1' ) }}"
+
+#parameter which we stored in aws paramater store has value, that paramater names comes and sit in above message 'test'
+#i.e change word 'test' with parameter name before executing script.
