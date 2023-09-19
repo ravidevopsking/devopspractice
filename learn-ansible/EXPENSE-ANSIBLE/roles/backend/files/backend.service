@@ -4,6 +4,9 @@ Description = Backend Service
 [Service]
 User=expense
 Environment=DB_HOST="mysql.rdevopsb73.online"
+#Environment=DB_HOST="{{ lookup('aws_ssm', 'expense.backend.DB_HOST', region='us-east-1' ) }}"
+#Note: use above 7th line instead of 6th, makesure u create expense.backend.DB_HOST name at aws parameter store
+#indeed parameter name has value mysql.rdevopsb73.online only
 ExecStart=/bin/node /app/index.js
 SyslogIdentifier=backend
 
